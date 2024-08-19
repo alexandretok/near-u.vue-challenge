@@ -1,4 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import TVShow from '../types/TVShow';
+import Image from '../types/Image';
 
 // Show id for "Powerpuff Girls"
 const DEFAULT_SHOW_ID = 1955;
@@ -16,40 +18,50 @@ class ApiService {
     });
   }
 
-  protected async getShowDetails<T>(showId = DEFAULT_SHOW_ID): Promise<T> {
+  public async getShowDetails(showId = DEFAULT_SHOW_ID): Promise<TVShow> {
     const path = `shows/${showId}`;
     try {
-      const response: AxiosResponse<T> = await this.api.get(path);
-      return response.data;
+      const response: AxiosResponse = await this.api.get(path);
+      return response.data as TVShow;
     } catch (error: any) {
       throw new Error(`GET request to ${path} failed: ${error.message}`);
     }
   }
 
-  protected async getShowSeasons<T>(showId = DEFAULT_SHOW_ID): Promise<T> {
+  public async getShowSeasons(showId = DEFAULT_SHOW_ID): Promise<any> {
     const path = `shows/${showId}/seasons`;
     try {
-      const response: AxiosResponse<T> = await this.api.get(path);
+      const response: AxiosResponse = await this.api.get(path);
       return response.data;
     } catch (error: any) {
       throw new Error(`GET request to ${path} failed: ${error.message}`);
     }
   }
 
-  protected async getSeasonEpisodesList<T>(seasonId: number): Promise<T> {
+  public async getShowImages(showId = DEFAULT_SHOW_ID): Promise<Image[]> {
+    const path = `shows/${showId}/images`;
+    try {
+      const response: AxiosResponse = await this.api.get(path);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`GET request to ${path} failed: ${error.message}`);
+    }
+  }
+
+  public async getSeasonEpisodesList(seasonId: number): Promise<any> {
     const path = `seasons/${seasonId}/episodes`;
     try {
-      const response: AxiosResponse<T> = await this.api.get(path);
+      const response: AxiosResponse = await this.api.get(path);
       return response.data;
     } catch (error: any) {
       throw new Error(`GET request to ${path} failed: ${error.message}`);
     }
   }
 
-  protected async getEpisodeDetails<T>(episodeId: number): Promise<T> {
+  public async getEpisodeDetails(episodeId: number): Promise<any> {
     const path = `episodes/${episodeId}`;
     try {
-      const response: AxiosResponse<T> = await this.api.get(path);
+      const response: AxiosResponse = await this.api.get(path);
       return response.data;
     } catch (error: any) {
       throw new Error(`GET request to ${path} failed: ${error.message}`);
@@ -57,4 +69,4 @@ class ApiService {
   }
 }
 
-export default ApiService;
+export default new ApiService();

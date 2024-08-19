@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import ShowDetails from './components/ShowDetails.vue'
+import TVShowDetails from './components/TVShowDetails.vue'
 </script>
 
 <template>
   <!-- TODO: Implement routing -->
-  <ShowDetails />
+  <TVShowDetails />
 </template>
 
 <style scoped>
