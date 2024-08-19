@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import TVShow from '../types/TVShow';
 import Image from '../types/Image';
+import Season from '../types/Season';
+import Episode from '../types/Episode';
 
 // Show id for "Powerpuff Girls"
 const DEFAULT_SHOW_ID = 1955;
@@ -22,13 +24,13 @@ class ApiService {
     const path = `shows/${showId}`;
     try {
       const response: AxiosResponse = await this.api.get(path);
-      return response.data as TVShow;
+      return response.data;
     } catch (error: any) {
       throw new Error(`GET request to ${path} failed: ${error.message}`);
     }
   }
 
-  public async getShowSeasons(showId = DEFAULT_SHOW_ID): Promise<any> {
+  public async getShowSeasons(showId = DEFAULT_SHOW_ID): Promise<Season[]> {
     const path = `shows/${showId}/seasons`;
     try {
       const response: AxiosResponse = await this.api.get(path);
@@ -48,7 +50,7 @@ class ApiService {
     }
   }
 
-  public async getSeasonEpisodesList(seasonId: number): Promise<any> {
+  public async getSeasonEpisodesList(seasonId: number): Promise<Episode[]> {
     const path = `seasons/${seasonId}/episodes`;
     try {
       const response: AxiosResponse = await this.api.get(path);
@@ -58,7 +60,7 @@ class ApiService {
     }
   }
 
-  public async getEpisodeDetails(episodeId: number): Promise<any> {
+  public async getEpisodeDetails(episodeId: number): Promise<Episode> {
     const path = `episodes/${episodeId}`;
     try {
       const response: AxiosResponse = await this.api.get(path);

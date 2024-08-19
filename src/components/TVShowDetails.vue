@@ -1,21 +1,37 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { NImage, NH1, NRate, NText } from 'naive-ui';
+import { NImage, NH1, NH2, NRate, NText, NButtonGroup, NButton, NCard } from 'naive-ui';
 import { Helper } from '../utils/Helper';
 import ApiService from '../services/api.service';
 import TVShow from '../types/TVShow';
 import Image from '../types/Image';
 import Status from '../types/Status';
+import Season from '../types/Season';
+import Episode from '../types/Episode';
 
 const tvShowData = ref<TVShow>();
+const seasons = ref<Season[]>([]);
+const episodes = ref<Episode[]>([]);
 const images = ref<Image[]>([]);
 const selectedImageUrl = ref<string>();
+const selectedSeason = ref<number>();
 
 onMounted(async () => {
-  [ tvShowData.value, images.value ] = await Promise.all([ApiService.getShowDetails(), ApiService.getShowImages()]);
+  [ tvShowData.value, seasons.value, images.value ] = await Promise.all([
+    ApiService.getShowDetails(),
+    ApiService.getShowSeasons(),
+    ApiService.getShowImages()
+  ]);
+
+  document.title = tvShowData.value.name;
   selectedImageUrl.value = images.value[0].resolutions.original.url;
+  selectSeason(seasons.value[0]);
 });
 
+const selectSeason = async (season: Season) => {
+  selectedSeason.value = season.number;
+  episodes.value = await ApiService.getSeasonEpisodesList(season.id);
+};
 </script>
 
 <template>
@@ -44,7 +60,7 @@ onMounted(async () => {
       <n-h1>{{ tvShowData.name }}</n-h1>
       <n-text :innerHTML="tvShowData.summary" />
       <n-text>
-        {{ $translate('rating.label') }}
+        {{ $translate('average-rating-colon') }}
         <n-rate
           :allow-half="true"
           :value="tvShowData.rating.average / 2"
@@ -54,22 +70,78 @@ onMounted(async () => {
         ({{ tvShowData.rating.average / 2 }})
       </n-text>
       <n-text v-if="tvShowData.genres.length">
-        {{ $translate('genres.label') }}
+        {{ $translate('genres-colon') }}
         {{ tvShowData.genres.join(', ') }}
       </n-text>
       <n-text>
-        {{ $translate('status.label') }}
+        {{ $translate('status-colon') }}
         {{ tvShowData.status }}
       </n-text>
       <n-text>
-        {{ $translate('premiere-date.label') }}
+        {{ $translate('premiere-date-colon') }}
         {{ Helper.formatDate(tvShowData.premiered) }}
       </n-text>
       <n-text v-if="tvShowData.status === Status.Ended">
-        {{ $translate('end-date.label') }}
+        {{ $translate('end-date-colon') }}
         {{ Helper.formatDate(tvShowData.ended) }}
       </n-text>
     </div>
+  </section>
+
+  <section class="tv-show-details__seasons">
+    <n-h2>{{ $translate('seasons') }}</n-h2>
+    <n-button-group>
+      <n-button
+        v-for="season in seasons"
+        :type="season.number === selectedSeason ? 'primary' : 'default'"
+        @click="selectSeason(season)"
+        round>
+        Season {{ season.number }}
+      </n-button>
+    </n-button-group>
+
+    <n-card v-for="episode in episodes">
+      <a :href="`/episode/${episode.id}`">
+        <n-h2>
+          {{ episode.season && episode.number && `S${episode.season}E${episode.number}:` }}
+          {{ episode.name }}
+        </n-h2>
+      </a>
+      <div class="tv-show-details__episode">
+        <a :href="`/episode/${episode.id}`">
+          <n-image
+            v-if="episode.image"
+            width="256px"
+            height="256px"
+            preview-disabled
+            :src="episode.image.original"
+          />
+        </a>
+        <div class="tv-show-details__episode-information">
+          <n-text v-if="episode.rating.average">
+            {{ $translate('average-rating-colon') }}
+            <n-rate
+              :allow-half="true"
+              :value="episode.rating.average / 2"
+              size="small"
+              readonly
+            />
+            ({{ episode.rating.average / 2 }})
+          </n-text>
+
+          <n-text v-if="episode.airdate">
+            {{ $translate('aired-colon') }}
+            {{ Helper.formatDate(episode.airdate) }}
+          </n-text>
+
+          <n-text v-if="episode.runtime">
+            {{ $translate('episode-duration-colon') }}
+            {{ episode.runtime }}  {{ $translate('minutes-abbreviation') }}
+          </n-text>
+          <n-text :innerHTML="episode.summary"></n-text>
+        </div>
+      </div>
+    </n-card>
   </section>
 </template>
 
@@ -96,6 +168,25 @@ onMounted(async () => {
   &__information {
     padding: 0 2.5rem;
     text-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__seasons {
+    padding: 0 2.5rem;
+    text-align: start;
+
+    .n-button-group {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__episode {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__episode-information {
     display: flex;
     flex-direction: column;
   }

@@ -1,9 +1,13 @@
 {
-  "rating.label": "Average rating:",
-  "genres.label": "Genres:",
-  "status.label": "Current status:",
-  "premiere-date.label": "Premiered on:",
-  "end-date.label": "Ended on:",
-  "summary.label": "Summary:",
-  "gallery.label": "Image gallery"
+  "average-rating-colon": "Average rating:",
+  "genres-colon": "Genres:",
+  "status-colon": "Current status:",
+  "premiere-date-colon": "Premiered on:",
+  "end-date-colon": "Ended on:",
+  "summary-colon": "Summary:",
+  "image-gallery": "Image gallery",
+  "seasons": "Seasons",
+  "episode-duration-colon": "Episode duration:",
+  "minutes-abbreviation": "min.",
+  "aired-colon": "Aired on:"
 }
