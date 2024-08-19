@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import TVShowDetails from './components/TVShowDetails.vue'
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute();
+const router = useRouter();
+console.log(route);
 </script>
 
 <template>
-  <!-- TODO: Implement routing -->
-  <TVShowDetails />
+  <RouterView />
 </template>
 
 <style scoped>
