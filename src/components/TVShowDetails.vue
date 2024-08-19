@@ -1,34 +1,49 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { NImage, NH1, NRate, NP, NCarousel } from 'naive-ui';
+import { NImage, NH1, NRate, NText } from 'naive-ui';
 import { Helper } from '../utils/Helper';
 import ApiService from '../services/api.service';
 import TVShow from '../types/TVShow';
 import Image from '../types/Image';
+import Status from '../types/Status';
 
 const tvShowData = ref<TVShow>();
 const images = ref<Image[]>([]);
-onMounted(async () => {
-  tvShowData.value = await ApiService.getShowDetails();
-  images.value = await ApiService.getShowImages();
-  console.log(images.value);
+const selectedImageUrl = ref<string>();
 
+onMounted(async () => {
+  [ tvShowData.value, images.value ] = await Promise.all([ApiService.getShowDetails(), ApiService.getShowImages()]);
+  selectedImageUrl.value = images.value[0].resolutions.original.url;
 });
 
 </script>
 
 <template>
   <section class="tv-show-details" v-if="tvShowData">
-    <n-image
-      class="tv-show-details__cover-image"
-      width="100%"
-      :preview-disabled="true"
-      :src="tvShowData.image.original"
-    />
+    <div class="tv-show-details__images">
+      <n-image
+        width="384px"
+        :preview-disabled="true"
+        :src="selectedImageUrl"
+      />
+      <div>
+        <n-image
+          v-for="image in images"
+          class="tv-show-details__thumbnail"
+          width="48px"
+          height="48px"
+          object-fit="fill"
+          preview-disabled
+          @click="selectedImageUrl = image.resolutions.original.url"
+          :src="image.resolutions.medium?.url || image.resolutions.original.url"
+        />
+      </div>
+    </div>
+
     <div class="tv-show-details__information">
       <n-h1>{{ tvShowData.name }}</n-h1>
-      <n-p :innerHTML="tvShowData.summary" />
-      <n-p>
+      <n-text :innerHTML="tvShowData.summary" />
+      <n-text>
         {{ $translate('rating.label') }}
         <n-rate
           :allow-half="true"
@@ -37,51 +52,52 @@ onMounted(async () => {
           readonly
         />
         ({{ tvShowData.rating.average / 2 }})
-      </n-p>
-      <n-p v-if="tvShowData.genres.length">
+      </n-text>
+      <n-text v-if="tvShowData.genres.length">
         {{ $translate('genres.label') }}
         {{ tvShowData.genres.join(', ') }}
-      </n-p>
-      <n-p>
+      </n-text>
+      <n-text>
         {{ $translate('status.label') }}
         {{ tvShowData.status }}
-      </n-p>
-      <n-p>
+      </n-text>
+      <n-text>
         {{ $translate('premiere-date.label') }}
         {{ Helper.formatDate(tvShowData.premiered) }}
-      </n-p>
-      <n-p>
+      </n-text>
+      <n-text v-if="tvShowData.status === Status.Ended">
         {{ $translate('end-date.label') }}
         {{ Helper.formatDate(tvShowData.ended) }}
-      </n-p>
+      </n-text>
     </div>
-  </section>
-
-  <section v-if="images.length">
-    {{ $translate('gallery.label') }}
-    <n-carousel
-      effect="card"
-      style="height: 256px"
-      show-arrow
-      autoplay
-      draggable
-      :interval="3000"
-    >
-      <n-carousel-item v-for="image in images">
-        <n-image
-          width="256px"
-          height="256px"
-          object-fit="cover"
-          :src="image.resolutions.medium?.url || image.resolutions.original.url"
-          :preview-src="image.resolutions.original.url"
-        />
-      </n-carousel-item>
-    </n-carousel>
   </section>
 </template>
 
 <style lang="scss" scoped>
 .tv-show-details {
+  padding: 2.5rem;
   display: flex;
+
+  &__thumbnail {
+    padding: 0.4rem 0.4rem 0 0;
+    cursor: pointer;
+  }
+
+  &__images {
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+
+    .n-image:first-of-type {
+      box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.25);
+    }
+  }
+
+  &__information {
+    padding: 0 2.5rem;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>
