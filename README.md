@@ -1,5 +1,12 @@
-# Vue 3 + TypeScript + Vite
+# Vue Project Challenge
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A project that displays information about a given TV show using TV Maze API as a data source.
+It consist of two pages, the first shows general information about the TV show, such as release date, images, seasons and episodes.
+The second gives more specific information about a given episode.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+This project is built using Vue 3, Vite, Pinia, Axios and NaiveUI.
+
+Home screen:
+![Home screen page](src/assets/image.png)
+
+You can check the project running live on the link below:
