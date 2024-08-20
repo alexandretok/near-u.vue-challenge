@@ -8,7 +8,7 @@ import Image from '../types/Image';
 import Status from '../types/Status';
 import Season from '../types/Season';
 import Episode from '../types/Episode';
-import { useEpisodeStore } from '../store/episode.store'
+import { useTVShowStore } from '../store/tv-show.store'
 
 const tvShowData = ref<TVShow>();
 const seasons = ref<Season[]>([]);
@@ -16,7 +16,7 @@ const episodes = ref<Episode[]>([]);
 const images = ref<Image[]>([]);
 const selectedImageUrl = ref<string>();
 const selectedSeason = ref<number>();
-const episodeStore = useEpisodeStore();
+const tvShowStore = useTVShowStore();
 
 onMounted(async () => {
   [ tvShowData.value, seasons.value, images.value ] = await Promise.all([
@@ -33,7 +33,7 @@ onMounted(async () => {
 const selectSeason = async (season: Season) => {
   selectedSeason.value = season.number;
   episodes.value = await ApiService.getSeasonEpisodesList(season.id);
-  episodeStore.setEpisodes(episodes.value);
+  tvShowStore.setEpisodes(episodes.value);
 };
 </script>
 
@@ -92,18 +92,18 @@ const selectSeason = async (season: Season) => {
   </section>
 
   <section class="tv-show-details__seasons">
-    <n-h2>{{ $translate('seasons') }}</n-h2>
+    <n-h2>{{ $translate('episodes') }}</n-h2>
     <n-button-group>
       <n-button
         v-for="season in seasons"
         :type="season.number === selectedSeason ? 'primary' : 'default'"
         @click="selectSeason(season)"
         round>
-        Season {{ season.number }}
+        {{ $translate('season') }} {{ season.number }}
       </n-button>
     </n-button-group>
 
-    <n-card v-for="episode in episodes">
+    <n-card hoverable v-for="episode in episodes">
       <RouterLink :to="`/episode/${episode.id}`">
         <n-h2>
           {{ episode.season && episode.number && `S${episode.season}E${episode.number}:` }}
@@ -162,6 +162,7 @@ const selectSeason = async (season: Season) => {
     text-align: start;
     display: flex;
     flex-direction: column;
+    flex-shrink: 2;
 
     .n-image:first-of-type {
       box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.25);
@@ -180,7 +181,11 @@ const selectSeason = async (season: Season) => {
     text-align: start;
 
     .n-button-group {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .n-card {
+      margin-bottom: 1rem;
     }
   }
 
