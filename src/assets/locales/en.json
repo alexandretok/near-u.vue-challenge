@@ -8,7 +8,9 @@
   "image-gallery": "Image gallery",
   "episodes": "Episodes",
   "season": "Season",
+  "episode": "Episode",
   "episode-duration-colon": "Episode duration:",
   "minutes-abbreviation": "min.",
-  "aired-colon": "Aired on:"
+  "aired-colon": "Aired on:",
+  "go-back": "Go back"
 }
