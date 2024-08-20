@@ -15,3 +15,5 @@ This project is built using Vue 3, Vite, Pinia, Axios and NaiveUI.
 *  `npm i`
 *  `npm run dev`
 * Open your browser using the displayed URL
+or you can check the application working live using the link below:
+[https://thriving-buttercream-18e8df.netlify.app/](https://thriving-buttercream-18e8df.netlify.app/)
