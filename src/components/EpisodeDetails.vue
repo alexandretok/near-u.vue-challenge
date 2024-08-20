@@ -43,6 +43,7 @@ onMounted(async () => {
 
   <section v-if="episode" class="episode-details__content">
     <n-image
+      v-if="episode.image"
       width="384px"
       :preview-disabled="true"
       :src="episode.image.original"
