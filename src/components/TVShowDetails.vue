@@ -200,6 +200,10 @@ const selectSeason = async (season: Season) => {
   &__episode {
     display: flex;
     gap: 1rem;
+
+    @media (max-width: 992px) {
+      flex-direction: column;
+    }
   }
 
   &__episode-information {
