@@ -40,7 +40,7 @@ const selectSeason = async (season: Season) => {
   <section class="tv-show-details" v-if="tvShowStore.tvShow">
     <div class="tv-show-details__images">
       <n-image
-        width="384px"
+        width="320px"
         :preview-disabled="true"
         :src="selectedImageUrl"
       />
@@ -157,7 +157,7 @@ const selectSeason = async (season: Season) => {
   }
 
   &__thumbnail-container {
-    max-width: 384px;
+    max-width: 320px;
   }
 
   &__thumbnail {

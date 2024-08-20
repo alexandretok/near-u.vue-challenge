@@ -6,6 +6,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Episode from '../types/Episode';
 import { useTVShowStore } from '../store/tv-show.store'
 import { Helper } from '../utils/Helper';
+import ApiService from '../services/api.service';
 
 const episode = ref<Episode>();
 const route = useRoute();
@@ -14,7 +15,8 @@ const tvShowStore = useTVShowStore();
 
 onMounted(async () => {
   const episodeId = route.params.episodeId;
-  episode.value = tvShowStore.getEpisodeById(+episodeId);
+  episode.value = tvShowStore.getEpisodeById(+episodeId) ||
+    await ApiService.getEpisodeDetails(+episodeId);
 
   if (!episode.value) {
     router.replace('/');
@@ -44,7 +46,7 @@ onMounted(async () => {
   <section v-if="episode" class="episode-details__content">
     <n-image
       v-if="episode.image"
-      width="384px"
+      width="320px"
       :preview-disabled="true"
       :src="episode.image.original"
     />

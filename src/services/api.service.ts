@@ -59,6 +59,16 @@ class ApiService {
       throw new Error(`GET request to ${path} failed: ${error.message}`);
     }
   }
+
+  public async getEpisodeDetails(episodeId: number): Promise<Episode> {
+    const path = `episodes/${episodeId}`;
+    try {
+      const response: AxiosResponse = await this.api.get(path);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`GET request to ${path} failed: ${error.message}`);
+    }
+  }
 }
 
 export default new ApiService();
