@@ -8,6 +8,7 @@ import Image from "../types/Image";
 export const useTVShowStore = defineStore('tv-show', () => {
   const _tvShow = ref<TVShow>();
   const _seasons = ref<Season[]>();
+  const _selectedSeason = ref<Season>();
   const _images = ref<Image[]>();
   const _episodes = ref<Episode[]>();
 
@@ -30,6 +31,11 @@ export const useTVShowStore = defineStore('tv-show', () => {
     _seasons.value = newSeasons;
   }
 
+  const selectedSeason = computed(() => _selectedSeason.value);
+  function setSelectedSeason(newSelectedSeason: Season) {
+    _selectedSeason.value = newSelectedSeason;
+  }
+
   const images = computed(() => _images.value);
   function setImages(newImages: Image[]) {
     _images.value = newImages;
@@ -39,11 +45,13 @@ export const useTVShowStore = defineStore('tv-show', () => {
     tvShow,
     episodes,
     seasons,
+    selectedSeason,
     images,
     getEpisodeById,
     setEpisodes,
     setTVShow,
     setSeasons,
+    setSelectedSeason,
     setImages
   }
 })
