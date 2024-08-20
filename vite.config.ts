@@ -7,7 +7,10 @@ export default defineConfig({
   base: "./",
   build: {
     rollupOptions: {
-      input: ['src/main.ts', './index.html']
+      input: ['src/main.ts', './index.html'],
+      output: {
+        entryFileNames: 'assets/[name].js',
+      }
     }
   },
 })
