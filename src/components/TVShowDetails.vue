@@ -8,6 +8,7 @@ import Image from '../types/Image';
 import Status from '../types/Status';
 import Season from '../types/Season';
 import Episode from '../types/Episode';
+import { useEpisodeStore } from '../store/episode.store'
 
 const tvShowData = ref<TVShow>();
 const seasons = ref<Season[]>([]);
@@ -15,6 +16,7 @@ const episodes = ref<Episode[]>([]);
 const images = ref<Image[]>([]);
 const selectedImageUrl = ref<string>();
 const selectedSeason = ref<number>();
+const episodeStore = useEpisodeStore();
 
 onMounted(async () => {
   [ tvShowData.value, seasons.value, images.value ] = await Promise.all([
@@ -31,6 +33,7 @@ onMounted(async () => {
 const selectSeason = async (season: Season) => {
   selectedSeason.value = season.number;
   episodes.value = await ApiService.getSeasonEpisodesList(season.id);
+  episodeStore.setEpisodes(episodes.value);
 };
 </script>
 
@@ -101,14 +104,14 @@ const selectSeason = async (season: Season) => {
     </n-button-group>
 
     <n-card v-for="episode in episodes">
-      <a :href="`/episode/${episode.id}`">
+      <RouterLink :to="`/episode/${episode.id}`">
         <n-h2>
           {{ episode.season && episode.number && `S${episode.season}E${episode.number}:` }}
           {{ episode.name }}
         </n-h2>
-      </a>
+      </RouterLink>
       <div class="tv-show-details__episode">
-        <a :href="`/episode/${episode.id}`">
+        <RouterLink :to="`/episode/${episode.id}`">
           <n-image
             v-if="episode.image"
             width="256px"
@@ -116,7 +119,7 @@ const selectSeason = async (season: Season) => {
             preview-disabled
             :src="episode.image.original"
           />
-        </a>
+        </RouterLink>
         <div class="tv-show-details__episode-information">
           <n-text v-if="episode.rating.average">
             {{ $translate('average-rating-colon') }}
