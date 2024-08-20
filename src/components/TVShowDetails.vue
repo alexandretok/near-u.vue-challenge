@@ -97,7 +97,7 @@ const selectSeason = async (season: Season) => {
         v-for="season in tvShowStore.seasons"
         :type="season.number === tvShowStore.selectedSeason?.number ? 'primary' : 'default'"
         @click="selectSeason(season)"
-        ghost>
+        default>
         {{ $translate('season') }} {{ season.number }}
       </n-button>
     </n-button-group>
