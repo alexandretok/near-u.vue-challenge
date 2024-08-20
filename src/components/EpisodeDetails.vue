@@ -60,13 +60,19 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
-.episode-details__header {
-  margin: 2rem;
-  display: flex;
-  justify-content: space-between;
+.episode-details {
+  &__header {
+    margin: 2rem;
+    display: flex;
+    justify-content: space-between;
 
-  .n-h2 {
-    margin-top: 0;
+    .n-h2 {
+      margin-top: 0;
+    }
+  }
+
+  &__content {
+    margin: 2rem;
   }
 }
 </style>

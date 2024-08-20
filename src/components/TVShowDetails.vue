@@ -44,7 +44,7 @@ const selectSeason = async (season: Season) => {
         :preview-disabled="true"
         :src="selectedImageUrl"
       />
-      <div>
+      <div class="tv-show-details__thumbnail-container">
         <n-image
           v-for="image in tvShowStore.images"
           class="tv-show-details__thumbnail"
@@ -152,6 +152,14 @@ const selectSeason = async (season: Season) => {
   padding: 2.5rem;
   display: flex;
 
+  @media (max-width: 992px) {
+    flex-direction: column;
+  }
+
+  &__thumbnail-container {
+    max-width: 384px;
+  }
+
   &__thumbnail {
     padding: 0.4rem 0.4rem 0 0;
     cursor: pointer;
@@ -161,10 +169,10 @@ const selectSeason = async (season: Season) => {
     text-align: start;
     display: flex;
     flex-direction: column;
-    flex-shrink: 2;
 
-    .n-image:first-of-type {
-      box-shadow: 5px 5px 20px -2px rgba(0,0,0,0.25);
+    @media (max-width: 992px) {
+      justify-content: center;
+      align-items: center;
     }
   }
 
